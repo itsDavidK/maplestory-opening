@@ -70,6 +70,7 @@ const RandomItemGenerator = () => {
     const [cubes, setCubes] = useState(0);
     const [nx, setNx] = useState(0);
     const [rank, setRank] = useState('');
+    const [previousItems, setPreviousItems] = useState([]);
 
     useEffect(() => {
         // Find the highest rank that the user has achieved
@@ -92,6 +93,11 @@ const RandomItemGenerator = () => {
         setRandomItem(filename);
         setItemFilename(filename);
         setCubes(cubes - 1);
+        setPreviousItems((prevItems) => {
+            const newItems = { ...prevItems };
+            newItems[filename] = (newItems[filename] || 0) + 1;
+            return newItems;
+        });
         }
     };
 
@@ -109,7 +115,12 @@ const RandomItemGenerator = () => {
         <div>
             <h1>Random Item Generator</h1>
             {randomItem && <img src={require(`../../assets/Items/${itemFilename}.png`)} alt="random item" />}
-            {itemFilename && <p>{itemFilename}</p>}
+            {itemFilename && 
+            <p>
+                {itemFilename}
+                {previousItems[itemFilename] > 1 &&
+              ` (${previousItems[itemFilename]})`}
+                </p>}
             <p>Cubes: {cubes}</p>
             <p>NX: {nx}</p>
             <p>Dollars: ${dollars}</p>
